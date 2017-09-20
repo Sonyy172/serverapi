@@ -42,7 +42,8 @@ def add_star():
     return jsonify({'result': output})
 
 
-@app.route('/user', methods=['GET'])
+# USER
+@app.route('/api', methods=['GET'])
 def get_all_user():
     user = mongo.db.USER
     output = []
@@ -54,6 +55,21 @@ def get_all_user():
             'HLV_da_binh_chon': user['HLV_da_binh_chon'],
             'subscribe_news': user['subscribe_news'],
             'message': user['message']
+        })
+    return jsonify({'result': output})
+
+
+# NEWS
+@app.route('/api', methods=['GET'])
+def get_all_news():
+    news = mongo.db.NEWS
+    output = []
+    for news in news.find():
+        output.append({
+            'title': news['title'],
+            'subtitle': news['subtitle'],
+            'image_url': news['image_url'],
+            'item_url': news['item_url']
         })
     return jsonify({'result': output})
 
