@@ -74,5 +74,28 @@ def get_all_news():
     return jsonify({'result': output})
 
 
+@app.route('/news', methods=['POST'])
+def add_news():
+    news = mongo.db.NEWS
+    title = request.json['title']
+    subtitle = request.json['subtitle']
+    image_url = request.json['image_url']
+    item_url = request.json['item_url']
+    news_id = news.insert({
+        'title': title,
+        'subtitle': subtitle,
+        'image_url': image_url,
+        'item_url': item_url
+    })
+    new_news = news.find_one({'_id': news_id})
+    output = {
+        'title': new_news['title'],
+        'subtitle': new_news['subtitle'],
+        'image_url': new_news['image_url'],
+        'item_url': new_news['item_url']
+    }
+    return jsonify({'result': output})
+
+
 if __name__ == '__main__':
     app.run(host='210.211.109.211', port=5000, debug=True, threaded=True)
