@@ -20,7 +20,7 @@ def get_all_stars():
     return jsonify({'result': output})
 
 
-@app.route('/star', methods=['GET'])
+@app.route('/star/', methods=['GET'])
 def get_one_star(name):
     star = mongo.db.stars
     s = star.find_one({'name': name})
