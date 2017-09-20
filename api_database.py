@@ -43,7 +43,7 @@ def add_star():
 
 
 # USER
-@app.route('/api', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def get_all_user():
     user = mongo.db.USER
     output = []
@@ -60,7 +60,7 @@ def get_all_user():
 
 
 # NEWS
-@app.route('/api', methods=['GET'])
+@app.route('/news', methods=['GET'])
 def get_all_news():
     news = mongo.db.NEWS
     output = []
