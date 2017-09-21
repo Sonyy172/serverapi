@@ -97,10 +97,37 @@ def add_news():
     return jsonify({'result': output})
 
 
-# @app.route('/news/update', methods=['PUT'])
-# def update_news(title):
-#     news = [news for news in NEWS if news['title'] == title]
-#     news['title']
+@app.route('/news/update', methods=['PUT'])
+def update_news():
+    news = mongo.db.NEWS
+
+    number = request.json['number']
+    title = request.json['title']
+    subtitle = request.json['subtitle']
+    image_url = request.json['image_url']
+    item_url = request.json['item_url']
+    # news = [news for news in NEWS if news['title'] == title]
+
+    updated_news = news[0].update(
+        {news['number']:  number},
+        {'$inc': {
+            news['number']: number,
+            news['title']: title,
+            news['subtitle']: subtitle,
+            news['image_url']: image_url,
+            news['item_url']: item_url
+        }}
+    )
+
+    new_news = news.find_one({'_id': updated_news})
+    output = {
+        'number': new_news['number'],
+        'title': new_news['title'],
+        'subtitle': new_news['subtitle'],
+        'image_url': new_news['image_url'],
+        'item_url': new_news['item_url']
+    }
+    return jsonify({'result': output})
 
 
 if __name__ == '__main__':
