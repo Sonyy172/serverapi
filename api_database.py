@@ -60,7 +60,7 @@ def get_all_user():
 
 
 # NEWS
-@app.route('/news', methods=['GET'])
+@app.route('/news/get', methods=['GET'])
 def get_all_news():
     news = mongo.db.NEWS
     output = []
@@ -95,6 +95,12 @@ def add_news():
         'item_url': new_news['item_url']
     }
     return jsonify({'result': output})
+
+
+# @app.route('/news/<string:title>', methods=['PUT'])
+# def edit_news(title):
+#     news = [news for news in NEWS if news['title'] == title]
+#     news['title']
 
 
 if __name__ == '__main__':
