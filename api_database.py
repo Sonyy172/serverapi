@@ -43,7 +43,7 @@ def add_star():
 
 
 # USER
-@app.route('/user', methods=['GET'])
+@app.route('/user/get', methods=['GET'])
 def get_all_user():
     user = mongo.db.USER
     output = []
