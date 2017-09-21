@@ -139,4 +139,4 @@ def update_news():
 
 
 if __name__ == '__main__':
-    app.run(host='210.211.109.211', port=5000, debug=True, threaded=True)
+    app.run(host='210.211.109.211', port=3000, debug=True, threaded=True)
