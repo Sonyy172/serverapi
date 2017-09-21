@@ -82,22 +82,27 @@ def add_news():
     subtitle = request.json['subtitle']
     image_url = request.json['image_url']
     item_url = request.json['item_url']
-    news_id = news.insert({
-        'number': number,
-        'title': title,
-        'subtitle': subtitle,
-        'image_url': image_url,
-        'item_url': item_url
-    })
-    new_news = news.find_one({'_id': news_id})
-    output = {
-        'number': new_news['number'],
-        'title': new_news['title'],
-        'subtitle': new_news['subtitle'],
-        'image_url': new_news['image_url'],
-        'item_url': new_news['item_url']
-    }
-    return jsonify({'result': output})
+
+    check_news = news.find_one({'item_url': item_url})
+    if bool(check_news):
+        return "news da co trong database"
+    else:
+        news_id = news.insert({
+            'number': number,
+            'title': title,
+            'subtitle': subtitle,
+            'image_url': image_url,
+            'item_url': item_url
+        })
+        new_news = news.find_one({'_id': news_id})
+        output = {
+            'number': new_news['number'],
+            'title': new_news['title'],
+            'subtitle': new_news['subtitle'],
+            'image_url': new_news['image_url'],
+            'item_url': new_news['item_url']
+        }
+        return jsonify({'result': output})
 
 
 @app.route('/news/update', methods=['PUT'])
