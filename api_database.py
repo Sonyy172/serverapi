@@ -74,7 +74,7 @@ def get_all_news():
     return jsonify({'result': output})
 
 
-@app.route('/news', methods=['POST'])
+@app.route('/news/insert', methods=['POST'])
 def add_news():
     news = mongo.db.NEWS
     title = request.json['title']
@@ -97,8 +97,8 @@ def add_news():
     return jsonify({'result': output})
 
 
-# @app.route('/news/<string:title>', methods=['PUT'])
-# def edit_news(title):
+# @app.route('/news/update', methods=['PUT'])
+# def update_news(title):
 #     news = [news for news in NEWS if news['title'] == title]
 #     news['title']
 
