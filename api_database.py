@@ -77,11 +77,13 @@ def get_all_news():
 @app.route('/news/insert', methods=['POST'])
 def add_news():
     news = mongo.db.NEWS
+    number = request.json['number']
     title = request.json['title']
     subtitle = request.json['subtitle']
     image_url = request.json['image_url']
     item_url = request.json['item_url']
     news_id = news.insert({
+        'number': number
         'title': title,
         'subtitle': subtitle,
         'image_url': image_url,
@@ -89,6 +91,7 @@ def add_news():
     })
     new_news = news.find_one({'_id': news_id})
     output = {
+        'number': new_news['number']
         'title': new_news['title'],
         'subtitle': new_news['subtitle'],
         'image_url': new_news['image_url'],
