@@ -1,8 +1,7 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
+from flask import Flask, render_template, url_for, request, session, redirect, jsonify
 from flask_pymongo import PyMongo
 import bcrypt
+
 
 app = Flask(__name__)
 
