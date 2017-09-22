@@ -33,7 +33,7 @@ def login():
             # return redirect(url_for('index.html'))
             return render_template('index.html')
 
-    return 'Invalid username/password combination'
+    # return 'Invalid username/password combination'
 
 
 @app.route('/register', methods=['POST', 'GET'])
