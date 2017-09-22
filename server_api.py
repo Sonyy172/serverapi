@@ -27,12 +27,10 @@ def login():
     hashed = bcrypt.hashpw(
         login_user['password'], bcrypt.gensalt())
 
-    # .encode('utf-8')
-
     if login_user:
         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
+            return redirect(url_for('index.html'))
 
     return 'Invalid username/password combination'
 
