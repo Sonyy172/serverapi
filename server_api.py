@@ -24,11 +24,13 @@ def index():
 def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
+    hashed = bcrypt.hashpw(
+        login_user['password'].encode('utf-8'), bcrypt.gensalt())
 
     # .encode('utf-8')
 
     if login_user:
-        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password']:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
