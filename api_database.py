@@ -2,6 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_pymongo import PyMongo
+import bcrypt
 
 app = Flask(__name__)
 
@@ -11,35 +12,45 @@ app.config['MONGO_URI'] = 'mongodb://cb.saostar.vn:27017/Phuc'
 mongo = PyMongo(app)
 
 
-@app.route('/star', methods=['GET'])
-def get_all_stars():
-    star = mongo.db.stars
-    output = []
-    for s in star.find():
-        output.append({'name': s['name'], 'distance': s['distance']})
-    return jsonify({'result': output})
+# USER_CMS authentication
+@app.route('/')
+def index():
+    if 'username' in session:
+        return 'You are logged in as ' + session['username']
+
+    return render_template('index.html')
 
 
-@app.route('/star/', methods=['GET'])
-def get_one_star(name):
-    star = mongo.db.stars
-    s = star.find_one({'name': name})
-    if s:
-        output = {'name': s['name'], 'distance': s['distance']}
-    else:
-        output = "No such name"
-    return jsonify({'result': output})
+@app.route('/login', methods=['POST'])
+def login():
+    users = mongo.db.USER_CMS
+    login_user = users.find_one({'name': request.form['username']})
+
+    if login_user:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+
+    return 'Invalid username/password combination'
 
 
-@app.route('/star', methods=['POST'])
-def add_star():
-    star = mongo.db.stars
-    name = request.json['name']
-    distance = request.json['distance']
-    star_id = star.insert({'name': name, 'distance': distance})
-    new_star = star.find_one({'_id': star_id})
-    output = {'name': new_star['name'], 'distance': new_star['distance']}
-    return jsonify({'result': output})
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        users = mongo.db.USER_CMS
+        existing_user = users.find_one({'name': request.form['username']})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(
+                request.form['pass'].encode('utf-8'), bcrypt.gensalt())
+            users.insert(
+                {'name': request.form['username'], 'password': hashpass})
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+
+        return 'That username already exists!'
+
+    return render_template('register.html')
 
 
 # USER
@@ -105,38 +116,39 @@ def add_news():
         return jsonify({'result': output})
 
 
-@app.route('/news/update', methods=['PUT'])
-def update_news():
-    news = mongo.db.NEWS
+# @app.route('/news/update', methods=['PUT'])
+# def update_news():
+#     news = mongo.db.NEWS
 
-    number = request.json['number']
-    title = request.json['title']
-    subtitle = request.json['subtitle']
-    image_url = request.json['image_url']
-    item_url = request.json['item_url']
-    # news = [news for news in NEWS if news['title'] == title]
+#     number = request.json['number']
+#     title = request.json['title']
+#     subtitle = request.json['subtitle']
+#     image_url = request.json['image_url']
+#     item_url = request.json['item_url']
+#     # news = [news for news in NEWS if news['title'] == title]
 
-    updated_news = news[0].update(
-        {news['number']:  number},
-        {'$inc': {
-            news['number']: number,
-            news['title']: title,
-            news['subtitle']: subtitle,
-            news['image_url']: image_url,
-            news['item_url']: item_url
-        }}
-    )
+#     updated_news = news[0].update(
+#         {news['number']:  number},
+#         {'$inc': {
+#             news['number']: number,
+#             news['title']: title,
+#             news['subtitle']: subtitle,
+#             news['image_url']: image_url,
+#             news['item_url']: item_url
+#         }}
+#     )
 
-    new_news = news.find_one({'_id': updated_news})
-    output = {
-        'number': new_news['number'],
-        'title': new_news['title'],
-        'subtitle': new_news['subtitle'],
-        'image_url': new_news['image_url'],
-        'item_url': new_news['item_url']
-    }
-    return jsonify({'result': output})
+#     new_news = news.find_one({'_id': updated_news})
+#     output = {
+#         'number': new_news['number'],
+#         'title': new_news['title'],
+#         'subtitle': new_news['subtitle'],
+#         'image_url': new_news['image_url'],
+#         'item_url': new_news['item_url']
+#     }
+#     return jsonify({'result': output})
 
 
 if __name__ == '__main__':
+    app.secret_key = 'mysecret'
     app.run(host='210.211.109.211', port=3000, debug=True, threaded=True)
