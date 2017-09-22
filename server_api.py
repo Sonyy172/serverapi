@@ -25,7 +25,7 @@ def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
     hashed = bcrypt.hashpw(
-        login_user['password'].encode('utf-8'), bcrypt.gensalt())
+        login_user['password'], bcrypt.gensalt())
 
     # .encode('utf-8')
 
