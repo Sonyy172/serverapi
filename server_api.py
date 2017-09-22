@@ -30,10 +30,10 @@ def login():
     if login_user:
         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
             session['username'] = request.form['username']
-            # return redirect(url_for('index.html'))
-            return render_template('index.html')
+            return redirect(url_for('index'))
+            # return render_template('index.html')
 
-    # return 'Invalid username/password combination'
+    return 'Invalid username/password combination'
 
 
 @app.route('/register', methods=['POST', 'GET'])
