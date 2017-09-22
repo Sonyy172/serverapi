@@ -25,8 +25,10 @@ def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
 
+    # .encode('utf-8')
+
     if login_user:
-        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
+        if bcrypt.hashpw(request.form['pass'], login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
