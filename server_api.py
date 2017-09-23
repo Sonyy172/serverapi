@@ -95,7 +95,7 @@ def get_all_news():
     output = []
     for news in news.find():
         output.append({
-            'id': ObjectId(news),
+            'id': news['_id'].toString(),
             'title': news['title'],
             'subtitle': news['subtitle'],
             'image_url': news['image_url'],
