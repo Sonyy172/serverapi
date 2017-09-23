@@ -21,32 +21,32 @@ def index():
 
 
 @app.route('/login', methods=['POST'])
-# def login():
-#     users = mongo.db.USER_CMS
-#     login_user = users.find_one({'name': request.form['username']})
-#     hashed = bcrypt.hashpw(login_user['password'], bcrypt.gensalt())
-#     if login_user:
-#         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
-#             session['username'] = request.form['username']
-#             return redirect(url_for('index'))
-#             # return render_template('index.html')
-#     return 'Invalid username/password combination'
 def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
+    hashed = bcrypt.hashpw(login_user['password'], bcrypt.gensalt())
+    if login_user:
+        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+            # return render_template('index.html')
+    return 'Invalid username/password combination'
+# def login():
+#     users = mongo.db.USER_CMS
+#     login_user = users.find_one({'name': request.form['username']})
 
-    if bool(login_user):
-        if login_user['password'] == request.form['pass']:
-            # user_activation_key = bcrypt.hashpw(
-            #     login_user['name'], bcrypt.gensalt())
-            # users.update_one(
-            #     {'name': login_user['name']},
-            #     {'$inc': {'user_activation_key': user_activation_key}}
-            # )
-            # return jsonify({'result': login_user})
-            return "dang nhap thanh cong"
-    else:
-        return "Invalid username or password"
+#     if bool(login_user):
+#         if login_user['password'] == request.form['pass']:
+#             # user_activation_key = bcrypt.hashpw(
+#             #     login_user['name'], bcrypt.gensalt())
+#             # users.update_one(
+#             #     {'name': login_user['name']},
+#             #     {'$inc': {'user_activation_key': user_activation_key}}
+#             # )
+#             # return jsonify({'result': login_user})
+#             return "dang nhap thanh cong"
+#     else:
+#         return "Invalid username or password"
 
 
 # @app.route('/logout', methods=['POST'])
