@@ -37,13 +37,14 @@ def login():
 
     if bool(login_user):
         if login_user['password'] == request.form['pass']:
-            # user_activation_key = bcrypt.hashpw(
-            #     login_user['name'], bcrypt.gensalt())
-            # users.update_one(
-            #     {'name': login_user['name']},
-            #     {'$inc': {'user_activation_key': user_activation_key}}
-            # )
-            return "dang nhap thanh cong"
+            user_activation_key = bcrypt.hashpw(
+                login_user['name'], bcrypt.gensalt())
+            users.update_one(
+                {'name': login_user['name']},
+                {'$inc': {'user_activation_key': user_activation_key}}
+            )
+            return jsonify({'result': login_user})
+
     else:
         return "Invalid username or password"
 
