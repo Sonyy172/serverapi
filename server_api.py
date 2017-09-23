@@ -21,19 +21,34 @@ def index():
 
 
 @app.route('/login', methods=['POST'])
+# def login():
+#     users = mongo.db.USER_CMS
+#     login_user = users.find_one({'name': request.form['username']})
+#     hashed = bcrypt.hashpw(login_user['password'], bcrypt.gensalt())
+#     if login_user:
+#         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
+#             session['username'] = request.form['username']
+#             return redirect(url_for('index'))
+#             # return render_template('index.html')
+#     return 'Invalid username/password combination'
 def login():
     users = mongo.db.USER_CMS
-    login_user = users.find_one({'name': request.form['username']})
-    hashed = bcrypt.hashpw(
-        login_user['password'], bcrypt.gensalt())
-
+    login_user = users.find_one(
+        {'name': request.form['username'], 'password': request.form['pass']})
     if login_user:
-        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
-            session['username'] = request.form['username']
-            return redirect(url_for('index'))
-            # return render_template('index.html')
+        user_activation_key = bcrypt.hashpw(
+            login_user['name'], bcrypt.gensalt())
+        users.update_one(
+            {'name': login_user['name']},
+            {'$inc': {'user_activation_key': user_activation_key}}
+        )
+        return user_activation_key
+    else:
+        return "Invalid username or password"
 
-    return 'Invalid username/password combination'
+
+# @app.route('/logout', methods=['POST'])
+# def
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -46,7 +61,7 @@ def register():
             hashpass = bcrypt.hashpw(
                 request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             users.insert(
-                {'name': request.form['username'], 'password': hashpass})
+                {'name': request.form['username'], 'password': hashpass}, 'user_activation_key': '',)
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
