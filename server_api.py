@@ -43,7 +43,7 @@ def login():
                 {'name': login_user['name']},
                 {'$inc': {'user_activation_key': user_activation_key}}
             )
-            return user_activation_key
+            return "dang nhap thanh cong"
     else:
         return "Invalid username or password"
 
