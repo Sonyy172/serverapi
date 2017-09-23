@@ -33,17 +33,17 @@ def index():
 #     return 'Invalid username/password combination'
 def login():
     users = mongo.db.USER_CMS
-    login_user = users.find_one(
-        {'name': request.form['username'], 'password': request.form['pass']})
-    # if login_user:
+    login_user = users.find_one({'name': request.form['username']})
+
     if bool(login_user):
-        user_activation_key = bcrypt.hashpw(
-            login_user['name'], bcrypt.gensalt())
-        users.update_one(
-            {'name': login_user['name']},
-            {'$inc': {'user_activation_key': user_activation_key}}
-        )
-        return user_activation_key
+        if login_user['password'] == request.form['pass']:
+            user_activation_key = bcrypt.hashpw(
+                login_user['name'], bcrypt.gensalt())
+            users.update_one(
+                {'name': login_user['name']},
+                {'$inc': {'user_activation_key': user_activation_key}}
+            )
+            return user_activation_key
     else:
         return "Invalid username or password"
 
