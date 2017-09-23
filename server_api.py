@@ -61,7 +61,7 @@ def register():
             hashpass = bcrypt.hashpw(
                 request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             users.insert(
-                {'name': request.form['username'], 'password': hashpass}, 'user_activation_key': '',)
+                {'name': request.form['username'], 'password': hashpass}, 'user_activation_key': '', 'permission': '')
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
