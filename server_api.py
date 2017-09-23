@@ -26,11 +26,12 @@ def login():
     login_user = users.find_one({'name': request.form['username']})
     hashed = bcrypt.hashpw(login_user['password'], bcrypt.gensalt())
     if login_user:
-        return "du"
+        return "phuc"
         # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
         #     session['username'] = request.form['username']
         #     return redirect(url_for('index'))
-    return 'Invalid username/password combination'
+    else:
+        return 'Invalid username/password combination'
 # def login():
 #     users = mongo.db.USER_CMS
 #     login_user = users.find_one({'name': request.form['username']})
