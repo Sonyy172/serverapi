@@ -26,7 +26,8 @@ def login():
     login_user = users.find_one({'name': request.form['username']})
     hashed = bcrypt.hashpw(login_user['password'], bcrypt.gensalt())
     if login_user:
-        return "phuc"
+        return hashed
+
         # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
         #     session['username'] = request.form['username']
         #     return redirect(url_for('index'))
