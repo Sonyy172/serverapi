@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, session, redirect, jsonify
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, ObjectId
 import bcrypt
 
 
@@ -95,7 +95,7 @@ def get_all_news():
     output = []
     for news in news.find():
         output.append({
-            'id': news.next()._id,
+            'id': ObjectId(news),
             'title': news['title'],
             'subtitle': news['subtitle'],
             'image_url': news['image_url'],
