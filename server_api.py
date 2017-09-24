@@ -27,13 +27,13 @@ def login():
     hashed = bcrypt.hashpw(
         login_user['name'].encode('utf-8'), bcrypt.gensalt())
     # hashed = str(hashed)
-
+    hashed = hashed.decode("utf-8")
     if login_user:
         # users.update_one(
         #     {'name': login_user['name']},
         #     {'$inc': {'user_activation_key': hashed}}
         # )
-        return type(hashed)
+        return hashed
 
         # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
         #     session['username'] = request.form['username']
