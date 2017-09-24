@@ -23,13 +23,13 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     users = mongo.db.USER_CMS
-    login_user = users.find_one({'name': request.form['username']})
+    login_user = users.find_one({'username': request.form['username']})
     user_activation_key = bcrypt.hashpw(
         login_user['name'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     if login_user:
-        if login_user['password'] == request.form['pass']:
+        if login_user['password'] == request.form['password']:
             users.update_one(
-                {'name': login_user['name']},
+                {'name': login_user['username']},
                 {'$set': {'user_activation_key': user_activation_key}}
             )
             return user_activation_key
@@ -49,10 +49,8 @@ def register():
         existing_user = users.find_one({'name': request.form['username']})
 
         if existing_user is None:
-            hashpass = bcrypt.hashpw(
-                request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             users.insert(
-                {'name': request.form['username'], 'password': hashpass, 'user_activation_key': '', 'permission': ''})
+                {'username': request.form['username'], 'password': request.form['password'], 'user_activation_key': '', 'permission': ''})
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
