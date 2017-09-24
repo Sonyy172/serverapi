@@ -24,39 +24,19 @@ def index():
 def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
-    hashed = bcrypt.hashpw(
+    user_activation_key = bcrypt.hashpw(
         login_user['name'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    # hashed = str(hashed)
-    # hashed = hashed.decode("utf-8")
     if login_user:
-        users.update_one(
-            {'name': login_user['name']},
-            {'$set': {'user_activation_key': hashed}}
-        )
-        return hashed
-
-        # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
-        #     session['username'] = request.form['username']
-        #     return redirect(url_for('index'))
+        if login_user['password'] == request.form['pass']:
+            users.update_one(
+                {'name': login_user['name']},
+                {'$set': {'user_activation_key': user_activation_key}}
+            )
+            return user_activation_key
+        else:
+            return 'Invalid password'
     else:
-        return 'Invalid username/password combination'
-# def login():
-#     users = mongo.db.USER_CMS
-#     login_user = users.find_one({'name': request.form['username']})
-
-#     if bool(login_user):
-#         if login_user['password'] == request.form['pass']:
-#             # user_activation_key = bcrypt.hashpw(
-#             #     login_user['name'], bcrypt.gensalt())
-#             # users.update_one(
-#             #     {'name': login_user['name']},
-#             #     {'$inc': {'user_activation_key': user_activation_key}}
-#             # )
-#             # return jsonify({'result': login_user})
-#             return "dang nhap thanh cong"
-#     else:
-#         return "Invalid username or password"
-
+        return 'Invalid username'
 
 # @app.route('/logout', methods=['POST'])
 # def
