@@ -25,15 +25,15 @@ def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'name': request.form['username']})
     hashed = bcrypt.hashpw(
-        login_user['name'].encode('utf-8'), bcrypt.gensalt())
+        login_user['name'].encode('utf-8'), bcrypt.gensalt()).encode('utf-8')
     # hashed = str(hashed)
-    hashed = hashed.decode("utf-8")
+    # hashed = hashed.decode("utf-8")
     if login_user:
         # users.update_one(
         #     {'name': login_user['name']},
         #     {'$inc': {'user_activation_key': hashed}}
         # )
-        return type(hashed) is str
+        return hashed
 
         # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
         #     session['username'] = request.form['username']
