@@ -33,7 +33,7 @@ def login():
         #     {'name': login_user['name']},
         #     {'$inc': {'user_activation_key': hashed}}
         # )
-        return type(hashed)
+        return type(hashed) is str
 
         # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), hashed) == hashed:
         #     session['username'] = request.form['username']
