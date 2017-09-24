@@ -26,7 +26,7 @@ def login():
     login_user = users.find_one({'name': request.form['username']})
     hashed = bcrypt.hashpw(
         login_user['name'].encode('utf-8'), bcrypt.gensalt())
-    hashed = str(hashed)
+    # hashed = str(hashed)
 
     if login_user:
         # users.update_one(
