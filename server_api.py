@@ -25,7 +25,7 @@ def login():
     users = mongo.db.USER_CMS
     login_user = users.find_one({'username': request.form['username']})
     user_activation_key = bcrypt.hashpw(
-        login_user['name'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        login_user['username'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     if login_user:
         if login_user['password'] == request.form['password']:
             users.update_one(
