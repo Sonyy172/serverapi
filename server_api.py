@@ -30,7 +30,7 @@ def login():
     if login_user:
         users.update_one(
             {'name': login_user['name']},
-            {'$inc': {'user_activation_key': str(hashed)}}
+            {'$inc': {'user_activation_key': parseInt(hashed)}}
         )
         return hashed
 
